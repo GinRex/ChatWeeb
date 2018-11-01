@@ -23,6 +23,7 @@ class Login extends Component {
         auth().onAuthStateChanged(user => {
             if (user) {
                 this.props.history.push("/home");
+                console.log(user.displayName);
             }
         })
     }
