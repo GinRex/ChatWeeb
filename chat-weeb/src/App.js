@@ -1,26 +1,28 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
 import './App.css';
+import firebaseInit from './firebase';
+import { createBrowserHistory } from "history";
+import { Router, Route, Switch, Redirect } from "react-router-dom";
+import { auth } from 'firebase';
+import Home from './Home';
+import Login from './Login';
+
+var hist = createBrowserHistory();
 
 class App extends Component {
+  constructor(props) {
+    super(props);
+    firebaseInit();
+  }
   render() {
     return (
-      <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <p>
-            Edit <code>src/App.js</code> and save to reload.
-          </p>
-          <a
-            className="App-link"
-            href="https://reactjs.org"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Learn React
-          </a>
-        </header>
-      </div>
+      <Router history={hist}>
+        <div>
+          <Route path="/login" component={Login} />
+          <Route path="/home" component={Home} />
+          <Redirect from="/" to="/login" />
+        </div>
+      </Router>
     );
   }
 }
