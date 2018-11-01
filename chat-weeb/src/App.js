@@ -17,8 +17,7 @@ class App extends Component {
     return (
       <Router history={hist}>
         <div>
-          <Route path="/home" component={Home} />
-          <Redirect from="/" to="/home" />
+          <Route path="/" component={Home} />
         </div>
       </Router>
     );
