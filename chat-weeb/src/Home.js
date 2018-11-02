@@ -11,13 +11,15 @@ import MenuItem from '@material-ui/core/MenuItem';
 import Menu from '@material-ui/core/Menu';
 import Button from '@material-ui/core/Button';
 import Avatar from '@material-ui/core/Avatar';
-import { auth } from 'firebase';
+import firebase, { auth } from 'firebase';
+import { withFirebase } from 'react-redux-firebase'
 
 class Home extends Component {
     state = {
         login: false,
         anchorEl: null,
         user: null,
+        users: []
     };
 
     handleChange = event => {
@@ -33,7 +35,7 @@ class Home extends Component {
     };
     signOutHandle = () => {
         auth().signOut();
-        this.setState({ login:false, user:null, anchorEl: null})
+        this.setState({ login: false, user: null, anchorEl: null })
     }
 
     loginHandle = () => {
@@ -48,11 +50,28 @@ class Home extends Component {
             console.log('error');
         })
     }
+
+    saveData = (user) => {
+        let id = user.email.slice(0, user.email.indexOf("@"));
+        console.log(id);
+        const ref = firebase.database().ref("users/" + id);
+        ref.set({ "username": user.displayName, "email": user.email, "avatar": user.photoURL });
+    }
+    loadUsers = () => {
+        const ref = firebase.database().ref("users");
+        ref.on('value', (users) => {
+            console.log(users.val());
+            this.setState({users: users.val()});
+            console.log(this.state);
+        })
+    }
     componentWillMount() {
         auth().onAuthStateChanged(user => {
             if (user) {
-                this.setState({user: user, login: true})
+                this.setState({ user: user, login: true })
                 console.log(user);
+                this.saveData(user);
+                this.loadUsers();
             }
         })
     }
@@ -61,49 +80,49 @@ class Home extends Component {
         const { classes } = this.props;
         const { login, anchorEl } = this.state;
         const open = Boolean(anchorEl);
-    
+
         return (
             <div className={classes.root}>
-            <AppBar position="static">
-              <Toolbar>
-                <IconButton className={classes.menuButton} color="inherit" aria-label="Menu">
-                  <MenuIcon />
-                </IconButton>
-                <Typography variant="h6" color="inherit" className={classes.grow}>
-                  Chat Weeb
+                <AppBar position="static">
+                    <Toolbar>
+                        <IconButton className={classes.menuButton} color="inherit" aria-label="Menu">
+                            <MenuIcon />
+                        </IconButton>
+                        <Typography variant="h6" color="inherit" className={classes.grow}>
+                            Chat Weeb
                 </Typography>
-                {login ? (
-                  <div>
-                    <IconButton
-                      aria-owns={open ? 'menu-appbar' : undefined}
-                      aria-haspopup="true"
-                      onClick={this.handleMenu}
-                      color="inherit"
-                    >
-                      { this.state.user.photoURL ? (<Avatar style={{height:"30px", width:"30px"}} src={this.state.user.photoURL} />) : <AccountCircle />}
-                    </IconButton>
-                    <Menu
-                      id="menu-appbar"
-                      anchorEl={anchorEl}
-                      anchorOrigin={{
-                        vertical: 'top',
-                        horizontal: 'right',
-                      }}
-                      transformOrigin={{
-                        vertical: 'top',
-                        horizontal: 'right',
-                      }}
-                      open={open}
-                      onClose={this.handleClose}
-                    >
-                      <MenuItem onClick={this.handleClose}>{this.state.user.displayName}</MenuItem>
-                      <MenuItem onClick={this.signOutHandle}>Log Out</MenuItem>
-                    </Menu>
-                  </div>
-                ) : <Button variant="contained" color="secondary" onClick={this.loginHandle}>Login</Button>} 
-              </Toolbar>
-            </AppBar>
-          </div>
+                        {login ? (
+                            <div>
+                                <IconButton
+                                    aria-owns={open ? 'menu-appbar' : undefined}
+                                    aria-haspopup="true"
+                                    onClick={this.handleMenu}
+                                    color="inherit"
+                                >
+                                    {this.state.user.photoURL ? (<Avatar style={{ height: "30px", width: "30px" }} src={this.state.user.photoURL} />) : <AccountCircle />}
+                                </IconButton>
+                                <Menu
+                                    id="menu-appbar"
+                                    anchorEl={anchorEl}
+                                    anchorOrigin={{
+                                        vertical: 'top',
+                                        horizontal: 'right',
+                                    }}
+                                    transformOrigin={{
+                                        vertical: 'top',
+                                        horizontal: 'right',
+                                    }}
+                                    open={open}
+                                    onClose={this.handleClose}
+                                >
+                                    <MenuItem onClick={this.handleClose}>{this.state.user.displayName}</MenuItem>
+                                    <MenuItem onClick={this.signOutHandle}>Log Out</MenuItem>
+                                </Menu>
+                            </div>
+                        ) : <Button variant="contained" color="secondary" onClick={this.loginHandle}>Login</Button>}
+                    </Toolbar>
+                </AppBar>
+            </div>
         );
     }
 }
