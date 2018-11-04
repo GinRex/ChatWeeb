@@ -14,6 +14,7 @@ import Avatar from '@material-ui/core/Avatar';
 import firebase, { auth } from 'firebase';
 import { withFirebase } from 'react-redux-firebase'
 import Users from './actions/users';
+import ChatScreen from './Chat/ChatScreen';
 
 class Home extends Component {
     state = {
@@ -124,6 +125,7 @@ class Home extends Component {
                     </Toolbar>
                 </AppBar>
                 <Users />
+                <ChatScreen />
             </div>
         );
     }
