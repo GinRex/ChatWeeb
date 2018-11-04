@@ -8,7 +8,15 @@ import { createStore, combineReducers, compose } from 'redux'
 import { reactReduxFirebase, firebaseReducer } from 'react-redux-firebase'
 import firebase from 'firebase'
 
-const firebaseConfig = {}
+
+const firebaseConfig = {
+    apiKey: "AIzaSyDEvooYPN6SfkqeQjVJvoHo_uzoPv_N8cE",
+    authDomain: "chat-weeb.firebaseapp.com",
+    databaseURL: "https://chat-weeb.firebaseio.com",
+    projectId: "chat-weeb",
+    storageBucket: "chat-weeb.appspot.com",
+    messagingSenderId: "60097506252"
+}
 
 // react-redux-firebase config
 const rrfConfig = {
@@ -39,10 +47,11 @@ const rootReducer = combineReducers({
 const initialState = {}
 const store = createStoreWithFirebase(rootReducer, initialState)
 
-
-ReactDOM.render(<Provider store={store}>
-    <App />
-</Provider>, document.getElementById('root'));
+ReactDOM.render(
+    <Provider store={store}>
+        <App />
+    </Provider>, 
+document.getElementById('root'));
 
 // If you want your app to work offline and load faster, you can change
 // unregister() to register() below. Note this comes with some pitfalls.

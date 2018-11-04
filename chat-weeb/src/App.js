@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import './App.css';
-import firebaseInit from './firebase';
 import { createBrowserHistory } from "history";
 import { Router, Route, Redirect } from "react-router-dom";
 import Home from './Home';
@@ -8,12 +7,8 @@ import Home from './Home';
 var hist = createBrowserHistory();
 
 class App extends Component {
-  constructor(props) {
-    super(props);
-    firebaseInit();
-  }
-
   render() {
+    console.log('test')
     return (
       <Router history={hist}>
         <div>

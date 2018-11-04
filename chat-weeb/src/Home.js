@@ -13,6 +13,7 @@ import Button from '@material-ui/core/Button';
 import Avatar from '@material-ui/core/Avatar';
 import firebase, { auth } from 'firebase';
 import { withFirebase } from 'react-redux-firebase'
+import Users from './actions/users';
 
 class Home extends Component {
     state = {
@@ -122,6 +123,7 @@ class Home extends Component {
                         ) : <Button variant="contained" color="secondary" onClick={this.loginHandle}>Login</Button>}
                     </Toolbar>
                 </AppBar>
+                <Users />
             </div>
         );
     }
