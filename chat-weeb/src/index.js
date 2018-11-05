@@ -21,6 +21,9 @@ const firebaseConfig = {
 // react-redux-firebase config
 const rrfConfig = {
     userProfile: 'users',
+    enableLogging: false, // enable/disable Firebase's database logging
+  presence: "presence", // where list of online users is stored in database
+  sessions: "sessions" // where list of user sessions is stored in database (presence must be enabled)
     // useFirestoreForProfile: true // Firestore for Profile instead of Realtime DB
 }
 

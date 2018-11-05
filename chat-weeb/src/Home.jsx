@@ -15,6 +15,8 @@ import firebase, { auth } from 'firebase';
 import { withFirebase } from 'react-redux-firebase'
 import Users from './actions/users';
 import ChatScreen from './Chat/ChatScreen';
+import { connect } from 'react-redux'
+
 
 class Home extends Component {
     state = {
@@ -36,53 +38,28 @@ class Home extends Component {
         this.setState({ anchorEl: null });
     };
     signOutHandle = () => {
-        auth().signOut();
+        firebase.logout();
         this.setState({ login: false, user: null, anchorEl: null })
     }
 
     loginHandle = () => {
 
-        const base_provider = new auth.GoogleAuthProvider();
-        console.log("login in");
-        auth().signInWithPopup(base_provider).then((result) => {
-            console.log(result);
-            console.log('success');
-        }).catch((err) => {
-            console.log(err);
-            console.log('error');
+        firebase.login({
+            provider: 'google',
+            type: 'popup'
+        }).then(() => {
+            console.log('aaa')
+            console.log(this.props.auth)
+            this.setState({ login: true, profile: this.props.profile});
         })
     }
 
-    saveData = (user) => {
-        let id = user.email.slice(0, user.email.indexOf("@"));
-        console.log(id);
-        const ref = firebase.database().ref("users/" + id);
-        ref.set({ "username": user.displayName, "email": user.email, "avatar": user.photoURL });
-    }
-    loadUsers = () => {
-        const ref = firebase.database().ref("users");
-        ref.on('value', (users) => {
-            console.log(users.val());
-            this.setState({users: users.val()});
-            console.log(this.state);
-        })
-    }
-    componentWillMount() {
-        auth().onAuthStateChanged(user => {
-            if (user) {
-                this.setState({ user: user, login: true })
-                console.log(user);
-                this.saveData(user);
-                this.loadUsers();
-            }
-        })
-    }
 
     render() {
-        const { classes } = this.props;
+        const { classes, firebase, profile } = this.props;
         const { login, anchorEl } = this.state;
         const open = Boolean(anchorEl);
-
+        console.log(this.props.auth)
         return (
             <div className={classes.root}>
                 <AppBar position="static">
@@ -93,7 +70,7 @@ class Home extends Component {
                         <Typography variant="h6" color="inherit" className={classes.grow}>
                             Chat Weeb
                 </Typography>
-                        {login ? (
+                        {!this.props.auth.isEmpty ? (
                             <div>
                                 <IconButton
                                     aria-owns={open ? 'menu-appbar' : undefined}
@@ -101,7 +78,7 @@ class Home extends Component {
                                     onClick={this.handleMenu}
                                     color="inherit"
                                 >
-                                    {this.state.user.photoURL ? (<Avatar style={{ height: "30px", width: "30px" }} src={this.state.user.photoURL} />) : <AccountCircle />}
+                                    {this.props.profile.avatarUrl ? (<Avatar style={{ height: "30px", width: "30px" }} src={this.props.profile.avatarUrl} />) : <AccountCircle />}
                                 </IconButton>
                                 <Menu
                                     id="menu-appbar"
@@ -117,7 +94,7 @@ class Home extends Component {
                                     open={open}
                                     onClose={this.handleClose}
                                 >
-                                    <MenuItem onClick={this.handleClose}>{this.state.user.displayName}</MenuItem>
+                                    <MenuItem onClick={this.handleClose}>{this.props.profile.displayName}</MenuItem>
                                     <MenuItem onClick={this.signOutHandle}>Log Out</MenuItem>
                                 </Menu>
                             </div>
@@ -144,5 +121,7 @@ const styles = {
     },
 };
 
-
-export default withStyles(styles)(Home);
+export default connect((state) => ({
+    auth: state.firebase.auth,
+    profile: state.firebase.profile
+  }))(withStyles(styles)(Home));

@@ -10,8 +10,9 @@ const message = ({ message }) => {
             </div>
             <div className="message my-message">
                 {message.text}
-                </div>
+            </div>
         </div>
+
     )
 }
 

@@ -5,9 +5,6 @@ import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
-import Divider from '@material-ui/core/Divider';
-import InboxIcon from '@material-ui/icons/Inbox';
-import DraftsIcon from '@material-ui/icons/Drafts';
 import Avatar from '@material-ui/core/Avatar';
 
 const styles = theme => ({
@@ -29,7 +26,7 @@ const ListUser = (props) => {
       <List component="nav">
         {Object.keys(users).map((key, id) => (
           <ListItem button>
-            <Avatar style={{ height: "30px", width: "30px" }} src={users[key].avatar} />
+            <Avatar style={{ height: "30px", width: "30px" }} src={users[key].avatarUrl} />
             <ListItemText primary={users[key].username} />
           </ListItem>
         ))}

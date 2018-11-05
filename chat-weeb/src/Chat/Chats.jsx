@@ -24,9 +24,17 @@ const enhance = compose(
 const Chats = ({ chat, firebase, params }) => {
   // firebase.watchEvent('value', 'chats');
   console.log(chat);
-  return (<div>{chat && Object.keys(chat).map((key, id) => (
-    <Message message={chat[key]} />
-  ))}</div>)
+  return (<div>
+    <div className="chat-history">
+      <ul>
+        {chat && Object.keys(chat).map((key, id) => (
+          <li className="clearfix">
+            <Message message={chat[key]} />
+          </li>
+        ))}
+      </ul>
+    </div>
+  </div>)
 }
 // <div>
 //   {/* <input
