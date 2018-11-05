@@ -124,7 +124,7 @@ class Home extends Component {
                         ) : <Button variant="contained" color="secondary" onClick={this.loginHandle}>Login</Button>}
                     </Toolbar>
                 </AppBar>
-                <Users />
+                {/* <Users /> */}
                 <ChatScreen />
             </div>
         );
