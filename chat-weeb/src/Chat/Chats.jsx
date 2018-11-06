@@ -29,7 +29,7 @@ const Chats = ({ chat, firebase, params }) => {
       <ul>
         {chat && Object.keys(chat).map((key, id) => (
           <li className="clearfix">
-            <Message message={chat[key]} />
+            <Message message={chat[key]} opp={params.opp} />
           </li>
         ))}
       </ul>

@@ -22,8 +22,8 @@ const firebaseConfig = {
 const rrfConfig = {
     userProfile: 'users',
     enableLogging: false, // enable/disable Firebase's database logging
-  presence: "presence", // where list of online users is stored in database
-  sessions: "sessions" // where list of user sessions is stored in database (presence must be enabled)
+    presence: "presence", // where list of online users is stored in database
+    sessions: "sessions" // where list of user sessions is stored in database (presence must be enabled)
     // useFirestoreForProfile: true // Firestore for Profile instead of Realtime DB
 }
 
@@ -53,8 +53,8 @@ const store = createStoreWithFirebase(rootReducer, initialState)
 ReactDOM.render(
     <Provider store={store}>
         <App />
-    </Provider>, 
-document.getElementById('root'));
+    </Provider>,
+    document.getElementById('root'));
 
 // If you want your app to work offline and load faster, you can change
 // unregister() to register() below. Note this comes with some pitfalls.
