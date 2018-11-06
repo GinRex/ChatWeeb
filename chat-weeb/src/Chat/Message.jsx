@@ -4,7 +4,7 @@ import { connect } from 'react-redux'
 
 const message = ({ message, auth, opp }) => {
     return (
-        auth.uid == message.receiveId ?
+        auth.uid == message.receiveId && auth.uid !== message.senderId ?
         <div>
             <div className="message-data">
                 <span className="message-data-name"><i className="fa fa-circle online" />{auth.displayName}</span>

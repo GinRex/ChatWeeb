@@ -21,32 +21,40 @@ const enhance = compose(
   }))
 )
 
-const Chats = ({ chat, firebase, params }) => {
-  // firebase.watchEvent('value', 'chats');
-  console.log(chat);
-  return (<div>
-    <div className="chat-history">
-      <ul>
-        {chat && Object.keys(chat).map((key, id) => (
-          <li className="clearfix">
-            <Message message={chat[key]} opp={params.opp} />
-          </li>
-        ))}
-      </ul>
-    </div>
-  </div>)
+class Chats extends React.Component {
+  scrollToBottom = () => {
+    this.messagesEnd.scrollIntoView({ behavior: "smooth" });
+  }
+  
+  componentDidMount() {
+    this.scrollToBottom();
+  }
+  
+  componentDidUpdate() {
+    this.scrollToBottom();
+  }
+  render() {
+    const { chat, firebase, params } = this.props;
+
+    console.log(chat);
+    return (
+      <div>
+        <div className="chat-history">
+          <ul>
+            {chat && Object.keys(chat).map((key, id) => (
+              <li className="clearfix">
+                <Message message={chat[key]} opp={params.opp} />
+              </li>
+            ))}
+          </ul>
+          <div style={{ float: "left", clear: "both" }}
+            ref={(el) => { this.messagesEnd = el; }}>
+          </div>
+        </div>
+      </div>
+    )
+  }
 }
-// <div>
-//   {/* <input
-//     name="isDone"
-//     type="checkbox"
-//     // checked={todo.isDone}
-//     onChange={() =>
-//       firebase.update(`todos/${params.chatId}`, { done: !todo.isDone })
-//     }
-//   /> */}
-//   <span>{chat.text}</span>
-// </div>
 
 // Export enhanced component
 export default enhance(Chats)
