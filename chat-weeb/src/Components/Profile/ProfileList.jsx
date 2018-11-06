@@ -2,8 +2,15 @@ import React from 'react';
 import Profile from './Profile';
 import '../../Chat/ChatScreen.scss';
 
-const ProfileList = ({ users, onClickUser, presence }) => {
-    console.log('users', users);
+const ProfileList = ({ users, onClickUser, presence, chats, id }) => {
+    console.log('chats', chats);
+    let messages = [];
+    chats && Object.keys(chats).map((key) => {
+        if (key.includes(id)) {
+            messages.push(key);
+        }
+    })
+    console.log(messages);
     let onlineList = [];
     Object.keys(presence).map((id) => {
         onlineList.push(id);

@@ -17,10 +17,16 @@ class SendMessages extends React.Component {
   }
   pushMessage = () => {
     const { firebase, chatId, receiverId, profile, auth } = this.props;
-    const message = { text: this.state.text, receiveId: receiverId, senderId: auth.uid, timestamp: '1512123' };
+    let time = new Date().getTime();
+    const message = { text: this.state.text, receiveId: receiverId, senderId: auth.uid, timestamp: time };
     firebase.push('chats/' + chatId, message)
     this.setState({text: ""})
+    this.setRecord();
   };
+  setRecord = () => {
+    let time = new Date().getTime();
+    this.props.firebase.updateProfile({lastMessage: time})
+  }
   render() {    
 
     //   const sampleThread = {id1:'datspots', id2: 'dattgk97'}

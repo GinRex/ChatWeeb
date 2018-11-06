@@ -12,10 +12,11 @@ import Menu from '@material-ui/core/Menu';
 import Button from '@material-ui/core/Button';
 import Avatar from '@material-ui/core/Avatar';
 import firebase, { auth } from 'firebase';
-import { withFirebase } from 'react-redux-firebase'
+import { withFirebase, isEmpty, isLoaded } from 'react-redux-firebase'
 import Users from './actions/users';
 import ChatScreen from './Chat/ChatScreen';
 import { connect } from 'react-redux'
+import moment from 'moment';
 
 
 class Home extends Component {
@@ -38,13 +39,15 @@ class Home extends Component {
         this.setState({ anchorEl: null });
     };
     signOutHandle = () => {
-        firebase.logout();
-        this.setState({ login: false, user: null, anchorEl: null })
+        
+        // firebase.updateProfile({lastOnline: })
+        this.props.firebase.logout();
+        this.setState({ login: false, user: null, anchorEl: null, users: null })
     }
 
     loginHandle = () => {
 
-        firebase.login({
+        this.props.firebase.login({
             provider: 'google',
             type: 'popup'
         }).then(() => {
@@ -54,12 +57,15 @@ class Home extends Component {
         })
     }
 
-
     render() {
-        const { classes, firebase, profile } = this.props;
+        const { classes, profile, auth } = this.props;
         const { login, anchorEl } = this.state;
         const open = Boolean(anchorEl);
-        console.log(this.props.auth)
+
+        if (!isEmpty(auth)) {
+            let time = new Date().getTime();
+            firebase.database().ref('users/' + this.props.auth.uid + '/lastOnline').onDisconnect().set(time);
+        }
         return (
             <div className={classes.root}>
                 <AppBar position="static">
@@ -124,4 +130,4 @@ const styles = {
 export default connect((state) => ({
     auth: state.firebase.auth,
     profile: state.firebase.profile
-  }))(withStyles(styles)(Home));
+  }))(withFirebase(withStyles(styles)(Home)));

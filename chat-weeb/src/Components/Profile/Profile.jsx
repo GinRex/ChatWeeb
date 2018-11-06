@@ -1,4 +1,5 @@
 import React from 'react';
+import moment from 'moment';
 
 const Profile = ({profile, online}) => {
     return (
@@ -8,7 +9,8 @@ const Profile = ({profile, online}) => {
             <div className="about">
                 <div className="name">{profile.displayName}</div>
                 <div className="status">
-                {online ? <i className="fa fa-circle online" />: <i className="fa fa-circle offline" />} {online ? 'online': 'offline'}
+                {online ? <i className="fa fa-circle online" />: <i className="fa fa-circle offline" />}
+                {online ? 'online': 'online ' + moment(profile.lastOnline).fromNow()}
                 </div>
             </div>
         </div>

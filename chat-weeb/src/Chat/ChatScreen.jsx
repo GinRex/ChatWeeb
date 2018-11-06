@@ -6,7 +6,6 @@ import { compose } from 'redux'
 import { firebaseConnect, isLoaded, isEmpty } from 'react-redux-firebase'
 import ProfileList from '../Components/Profile/ProfileList';
 import './ChatScreen.scss';
-import AccountCircle from '@material-ui/icons/AccountCircle';
 
 
 class ChatScreen extends React.Component {
@@ -27,14 +26,14 @@ class ChatScreen extends React.Component {
     }
 
     render() {
-        const { users, profile, auth, presence } = this.props;
+        const { users, profile, auth, presence, chats } = this.props;
         console.log(this.props.users)
         console.log('presence', presence);
         const usersList = !isLoaded(users) || !isLoaded(presence)
             ? 'Loading'
-            : isEmpty(users) || isEmpty(presence)
+            : isEmpty(users) || isEmpty(presence) || isEmpty(auth)
                 ? 'users list is empty'
-                : <ProfileList users={users} presence={presence} onClickUser={this.onUserClickHandler} />
+                : <ProfileList users={users} presence={presence} onClickUser={this.onUserClickHandler} chats={chats} id={auth.uid}/>
         
         return (<div>
 
@@ -65,12 +64,14 @@ class ChatScreen extends React.Component {
 export default compose(
     firebaseConnect([
         'users', // { path: '/todos' } // object notation
-        'presence'
+        'presence',
+        'chats'
     ]),
     connect((state) => ({
         auth: state.firebase.auth,
         users: state.firebase.data.users,
         presence: state.firebase.data.presence,
+        chats: state.firebase.data.chats,
         profile: state.firebase.profile // load profile
     }))
 )(ChatScreen)
