@@ -6,6 +6,7 @@ import { connect } from 'react-redux'
 class SendMessages extends React.Component {
   state = {
     text: "",
+    image: ""
   }
   messageHandler = (e) => {
     this.setState({text: e.target.value})
@@ -27,8 +28,9 @@ class SendMessages extends React.Component {
     let time = new Date().getTime();
     this.props.firebase.updateProfile({lastMessage: time})
   }
-  render() {    
 
+
+  render() {    
     //   const sampleThread = {id1:'datspots', id2: 'dattgk97'}
     
     return (
