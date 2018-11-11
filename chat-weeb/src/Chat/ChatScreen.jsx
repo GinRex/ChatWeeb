@@ -25,6 +25,15 @@ class ChatScreen extends React.Component {
         this.setState({ receiverId: userId, chatId: id, opp: this.props.users[userId] })
     }
 
+    componentWillReceiveProps() {
+        const { users, profile, auth, presence, chats } = this.props;
+        const usersList = !isLoaded(users) || !isLoaded(presence)
+            ? 'Loading'
+            : isEmpty(users) || isEmpty(presence) || isEmpty(auth)
+                ? 'users list is empty'
+                : <ProfileList users={users} presence={presence} onClickUser={this.onUserClickHandler} chats={chats} id={auth.uid}/>
+    }
+
     render() {
         const { users, profile, auth, presence, chats } = this.props;
         console.log(this.props.users)

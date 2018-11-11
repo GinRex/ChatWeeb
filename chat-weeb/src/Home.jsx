@@ -41,6 +41,8 @@ class Home extends Component {
     signOutHandle = () => {
         
         // firebase.updateProfile({lastOnline: })
+        let time = new Date().getTime();
+        firebase.database().ref('users/' + this.props.auth.uid + '/lastOnline').set(time);
         this.props.firebase.logout();
         this.setState({ login: false, user: null, anchorEl: null, users: null })
     }
@@ -108,7 +110,9 @@ class Home extends Component {
                     </Toolbar>
                 </AppBar>
                 {/* <Users /> */}
-                <ChatScreen />
+                {!this.props.auth.isEmpty ?
+                <ChatScreen /> : "Please Login first"
+                }
             </div>
         );
     }
