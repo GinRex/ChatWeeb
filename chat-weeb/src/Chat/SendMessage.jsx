@@ -1,7 +1,40 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { withFirebase } from 'react-redux-firebase'
+import { withFirebase, firebaseConnect } from 'react-redux-firebase'
+import { compose, withHandlers, setPropTypes } from 'recompose';
+import { map } from 'lodash';
 import { connect } from 'react-redux'
+import Dropzone from 'react-dropzone';
+
+const filesPath = 'uploadedFiles';
+
+const enhance = compose(
+  // Create listeners for Real Time Database which write to redux store
+  firebaseConnect([{ path: filesPath }]),
+  // connect redux state to props
+  connect(({ firebase: { data } }) => ({
+    uploadedFiles: data[filesPath],
+  })),
+  connect((state) => ({
+      profile: state.firebase.profile,
+      auth: state.firebase.auth
+  })),
+  // Add handlers as props
+  withHandlers(handlers)
+);
+
+const handlers = {
+  // Uploads files and push's objects containing metadata to database at dbPath
+  onFilesDrop: props => files => {
+    // uploadFiles(storagePath, files, dbPath)
+    console.log(files)
+    return props.firebase.uploadFiles(filesPath, files, filesPath);
+  },
+  onFileDelete: props => (file, key) => {
+    // deleteFile(storagePath, dbPath)
+    return props.firebase.deleteFile(file.fullPath, `${filesPath}/${key}`);
+  }
+};
 
 class SendMessages extends React.Component {
   state = {
@@ -9,10 +42,10 @@ class SendMessages extends React.Component {
     image: ""
   }
   messageHandler = (e) => {
-    this.setState({text: e.target.value})
+    this.setState({ text: e.target.value })
   }
   handleKeyPress = (key) => {
-    if(key.charCode == 13) {
+    if (key.charCode == 13) {
       this.pushMessage();
     }
   }
@@ -21,36 +54,58 @@ class SendMessages extends React.Component {
     let time = new Date().getTime();
     const message = { text: this.state.text, receiveId: receiverId, senderId: auth.uid, timestamp: time };
     firebase.push('chats/' + chatId, message)
-    this.setState({text: ""})
+    this.setState({ text: "" })
     this.setRecord();
   };
   setRecord = () => {
     let time = new Date().getTime();
-    this.props.firebase.updateProfile({lastMessage: time})
+    this.props.firebase.updateProfile({ lastMessage: time })
+  }
+
+  uploadImageHandler = () => {
+    console.log('upload image');
   }
 
 
-  render() {    
+  render() {
     //   const sampleThread = {id1:'datspots', id2: 'dattgk97'}
-    
+    const { uploadedFiles, onFileDelete, onFilesDrop } = this.props;
     return (
       <div className="chat-message clearfix">
-        <textarea 
-        name="message-to-send" 
-        id="message-to-send" 
-        placeholder="Type your message" 
-        rows={3} defaultValue={""} 
-        value={this.state.text} 
-        onChange={this.messageHandler}
-        onKeyPress={this.handleKeyPress}/>
+        <textarea
+          name="message-to-send"
+          id="message-to-send"
+          placeholder="Type your message"
+          rows={3} defaultValue={""}
+          value={this.state.text}
+          onChange={this.messageHandler}
+          onKeyPress={this.handleKeyPress} />
         <i className="fa fa-file-o" /> &nbsp;&nbsp;&nbsp;
             <i className="fa fa-file-image-o" />
+
         <button onClick={this.pushMessage}>Send</button>
+        <button onClick={this.uploadImageHandler}>Upload Image</button>
+        <Dropzone onDrop={onFilesDrop}>
+          <div>Drag and drop files here or click to select</div>
+        </Dropzone>
+        {uploadedFiles && (
+      <div>
+        <h3>Uploaded file(s):</h3>
+        {map(uploadedFiles, (file, key) => (
+          <div key={file.name + key}>
+            <span>{file.name}</span>
+            <button onClick={() => onFileDelete(file, key)}>Delete File</button>
+          </div>
+        ))}
+      </div>
+    )}
       </div>
     )
   }
 }
-export default connect((state) => ({
-  profile: state.firebase.profile,
-  auth: state.firebase.auth
-}))(withFirebase(SendMessages))
+
+export default enhance(SendMessages)
+// export default connect((state) => ({
+//   profile: state.firebase.profile,
+//   auth: state.firebase.auth
+// }))(withFirebase(SendMessages))
