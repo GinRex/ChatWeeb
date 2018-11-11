@@ -3,8 +3,7 @@ import Profile from './Profile';
 import '../../Chat/ChatScreen.scss';
 import _ from 'lodash';
 
-const ProfileList = ({ users, onClickUser, presence, chats, id }) => {
-    console.log('chats', chats);
+const ProfileList = ({ search, users, onClickUser, presence, chats, id }) => {
     let messages = [];
     chats && Object.keys(chats).map((key) => {
         if (key.includes(id) && chats[key]) {
@@ -14,18 +13,14 @@ const ProfileList = ({ users, onClickUser, presence, chats, id }) => {
             // console.log(chatFullId)
         }
     })
-    console.log(users);
-    console.log(messages);
     messages.sort((a,b) => a.timestamp < b.timestamp ? 1 : (a.timestamp > b.timestamp ? -1 : 0));
-    console.log(messages);
-
     let profiles = [];
     if(users) {
         let usersList = _.clone(users);
         messages.forEach(profId => {
             let pid = profId.id;
             profiles[pid] = usersList[pid];
-            // delete usersList[pid];
+            delete usersList[pid];
         });
         console.log(usersList)
         // users = profiles;
@@ -52,6 +47,7 @@ const ProfileList = ({ users, onClickUser, presence, chats, id }) => {
                             <Profile
                                 profile={profiles[key]}
                                 key={key}
+                                search={search}
                                 online={onlineList.includes(key)}
                             />
                         </li>

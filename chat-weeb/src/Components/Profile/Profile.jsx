@@ -1,8 +1,10 @@
 import React from 'react';
 import moment from 'moment';
 
-const Profile = ({profile, online}) => {
+const Profile = ({profile, online, search}) => {
+    console.log(search);
     return (
+        profile.displayName.includes(search) ?
         <div>
             {online ? <img src={profile.avatarUrl} style={{borderRadius:"25px", width:"50px", height:"50px", borderWidth:"unset", borderColor:"aqua", borderStyle:"solid"}} alt="avatarUrl" />
             : <img src={profile.avatarUrl} style={{borderRadius:"25px", width:"50px", height:"50px"}} alt="avatarUrl" /> }
@@ -14,6 +16,7 @@ const Profile = ({profile, online}) => {
                 </div>
             </div>
         </div>
+        : <div></div>
     )
 }
 

@@ -13,6 +13,7 @@ class ChatScreen extends React.Component {
         receiverId: null,
         chatId: null,
         opp: null,
+        search: ''
     }
 
     onUserClickHandler = (userId) => {
@@ -23,6 +24,10 @@ class ChatScreen extends React.Component {
         }
         else id = this.props.auth.uid + userId;
         this.setState({ receiverId: userId, chatId: id, opp: this.props.users[userId] })
+    }
+
+    searchChangeHandler = (event) => {
+        this.setState({search: event.target.value})
     }
 
     componentWillReceiveProps() {
@@ -42,14 +47,14 @@ class ChatScreen extends React.Component {
             ? 'Loading'
             : isEmpty(users) || isEmpty(presence) || isEmpty(auth)
                 ? 'users list is empty'
-                : <ProfileList users={users} presence={presence} onClickUser={this.onUserClickHandler} chats={chats} id={auth.uid}/>
+                : <ProfileList search={this.state.search} users={users} presence={presence} onClickUser={this.onUserClickHandler} chats={chats} id={auth.uid}/>
         
         return (<div>
 
             <div className="container clearfix">
                 <div className="people-list" id="people-list">
                     <div className="search">
-                        <input type="text" placeholder="search" />
+                        <input type="text" placeholder="search" value={this.state.search} onChange={this.searchChangeHandler} />
                         <i className="fa fa-search" />
                     </div>
                     {usersList}
