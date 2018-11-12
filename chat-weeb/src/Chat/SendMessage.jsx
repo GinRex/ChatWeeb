@@ -1,6 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { withFirebase, firebaseConnect } from 'react-redux-firebase'
+import { withFirebase, firebaseConnect, getVal } from 'react-redux-firebase'
 import { compose, withHandlers, setPropTypes } from 'recompose';
 import { map } from 'lodash';
 import { connect } from 'react-redux'
@@ -16,8 +16,8 @@ const enhance = compose(
     uploadedFiles: data[filesPath],
   })),
   connect((state) => ({
-      profile: state.firebase.profile,
-      auth: state.firebase.auth
+    profile: state.firebase.profile,
+    auth: state.firebase.auth,
   })),
   // Add handlers as props
   withHandlers(handlers)
@@ -39,9 +39,13 @@ const handlers = {
 class SendMessages extends React.Component {
   state = {
     text: "",
-    image: ""
+    image: "",
   }
   messageHandler = (e) => {
+    let words = e.target.value.split(" ");
+    words.map((word) => {
+      this.isImageUrl(word);
+    })
     this.setState({ text: e.target.value })
   }
   handleKeyPress = (key) => {
@@ -52,9 +56,10 @@ class SendMessages extends React.Component {
   pushMessage = () => {
     const { firebase, chatId, receiverId, profile, auth } = this.props;
     let time = new Date().getTime();
-    const message = { text: this.state.text, receiveId: receiverId, senderId: auth.uid, timestamp: time };
+    const message = { text: this.state.text + " ", image: this.state.image, receiveId: receiverId, senderId: auth.uid, timestamp: time };
+    console.log(message)
     firebase.push('chats/' + chatId, message)
-    this.setState({ text: "" })
+    this.setState({ text: "", image: "" })
     this.setRecord();
   };
   setRecord = () => {
@@ -62,14 +67,32 @@ class SendMessages extends React.Component {
     this.props.firebase.updateProfile({ lastMessage: time })
   }
 
-  uploadImageHandler = () => {
-    console.log('upload image');
+  uploadImageHandler = (e) => {
+    console.log('upload image', e.target.files[0]);
+    this.props.firebase.uploadFile(filesPath, e.target.files[0], filesPath);
+    console.log(e.target.files[0].name)
+    this.props.firebase.storage().ref().child('uploadedFiles/' + e.target.files[0].name)
+      .getDownloadURL().then((url) => this.setState({ image: url }));
+
   }
 
+
+  isImageUrl = (url) => {
+    let ima = new Image();
+    ima.src = url;
+    ima.onload = () => {
+      this.setState({ image: url });
+    }
+    // ima.onerror = () => {
+    //     this.setState({ image: ''})
+    // }
+  }
 
   render() {
     //   const sampleThread = {id1:'datspots', id2: 'dattgk97'}
     const { uploadedFiles, onFileDelete, onFilesDrop } = this.props;
+    console.log(uploadedFiles);
+    
     return (
       <div className="chat-message clearfix">
         <textarea
@@ -84,21 +107,18 @@ class SendMessages extends React.Component {
             <i className="fa fa-file-image-o" />
 
         <button onClick={this.pushMessage}>Send</button>
-        <button onClick={this.uploadImageHandler}>Upload Image</button>
-        <Dropzone onDrop={onFilesDrop}>
-          <div>Drag and drop files here or click to select</div>
-        </Dropzone>
+        <input type="file" onChange={this.uploadImageHandler} />
         {uploadedFiles && (
-      <div>
-        <h3>Uploaded file(s):</h3>
-        {map(uploadedFiles, (file, key) => (
-          <div key={file.name + key}>
-            <span>{file.name}</span>
-            <button onClick={() => onFileDelete(file, key)}>Delete File</button>
+          <div>
+            <h3>Uploaded file(s):</h3>
+            {map(uploadedFiles, (file, key) => (
+              <div key={file.name + key}>
+                <span>{file.name}</span>
+                <button onClick={() => onFileDelete(file, key)}>Delete File</button>
+              </div>
+            ))}
           </div>
-        ))}
-      </div>
-    )}
+        )}
       </div>
     )
   }
