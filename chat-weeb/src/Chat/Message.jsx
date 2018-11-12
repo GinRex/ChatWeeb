@@ -21,7 +21,7 @@ class message extends React.Component {
             auth.uid == message.receiveId && auth.uid !== message.senderId ?
                 <div>
                     <div className="message-data">
-                        <span className="message-data-name"><i className="fa fa-circle online" />{auth.displayName}</span>
+                        <span className="message-data-name"><i className="fa fa-circle online" />{opp.displayName}</span>
                         <span className="message-data-time">{moment(message.timestamp).format("DD MMM YYYY hh:mm a")}</span>
                     </div>
                     <div className="message my-message">
@@ -32,7 +32,7 @@ class message extends React.Component {
                 :
                 <div>
                     <div className="message-data align-right">
-                        <span className="message-data-name"><i className="fa fa-circle online" />{opp.displayName}</span>
+                        <span className="message-data-name"><i className="fa fa-circle online" />{auth.displayName}</span>
                         <span className="message-data-time">{moment(message.timestamp).format("DD MMM YYYY hh:mm a")}</span>
                     </div>
                     <div className="message other-message float-right">

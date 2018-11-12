@@ -27,7 +27,7 @@ class ChatScreen extends React.Component {
     }
 
     searchChangeHandler = (event) => {
-        this.setState({search: event.target.value})
+        this.setState({search: event.target.value.toLowerCase()})
     }
 
     componentWillReceiveProps() {
@@ -39,9 +39,24 @@ class ChatScreen extends React.Component {
                 : <ProfileList users={users} presence={presence} onClickUser={this.onUserClickHandler} chats={chats} id={auth.uid}/>
     }
 
+    toggleFavorite = () => {
+        const favoriteList = this.props.profile.favoriteList || [];
+        console.log(favoriteList);
+        if (this.isFavorite(this.state.receiverId)) {
+            favoriteList.splice(favoriteList.indexOf(this.state.receiverId), 1);
+            this.props.firebase.updateProfile({ favoriteList })
+        }
+        else this.props.firebase.updateProfile({ favoriteList: [...favoriteList, this.state.receiverId]})
+    }
+
+    isFavorite = (id) => {
+        const favoriteList = this.props.profile.favoriteList || [];
+        return favoriteList.includes(id);
+    }
+
     render() {
         const { users, profile, auth, presence, chats } = this.props;
-        console.log(this.props.users)
+        console.log(this.state.opp)
         console.log('presence', presence);
         const usersList = !isLoaded(users) || !isLoaded(presence)
             ? 'Loading'
@@ -63,10 +78,11 @@ class ChatScreen extends React.Component {
                     <div className="chat-header clearfix">
                     {this.state.opp ? <img src={this.state.opp.avatarUrl} style={{ borderRadius: "30px", width: "60px", height: "60px" }} alt="avatarUrl" />  : "" } 
                         
-                        <div className="chat-about">
+                        <div className="chat-about" >
                             <div className="chat-with">{this.state.opp ? this.state.opp.displayName : "Choose someone from user list"}</div>
                         </div>
-                        <i className="fa fa-star" />
+                        {this.isFavorite(this.state.receiverId) ? <i className="fa fa-star" style={{color:"pink"}} onClick={this.toggleFavorite} /> :
+                        <i className="fa fa-star" onClick={this.toggleFavorite} />}
                     </div> {/* end chat-header */}
                     <Chats params={{ chatId: this.state.chatId, opp: this.state.opp }} />
                     {this.state.opp ? <SendMessages receiverId={this.state.receiverId} chatId={this.state.chatId} />  : ""}
@@ -79,7 +95,8 @@ export default compose(
     firebaseConnect([
         'users', // { path: '/todos' } // object notation
         'presence',
-        'chats'
+        'chats',
+        'profile'
     ]),
     connect((state) => ({
         auth: state.firebase.auth,
