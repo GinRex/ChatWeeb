@@ -59,7 +59,7 @@ class SendMessages extends React.Component {
     const message = { text: this.state.text + " ", image: this.state.image, receiveId: receiverId, senderId: auth.uid, timestamp: time };
     console.log(message)
     firebase.push('chats/' + chatId, message)
-    this.setState({ text: "", image: "" })
+    this.setState({ text: "", image: ""})
     this.setRecord();
   };
   setRecord = () => {
@@ -68,6 +68,7 @@ class SendMessages extends React.Component {
   }
 
   uploadImageHandler = (e) => {
+    this.setState({file: e.target.files[0]})
     console.log('upload image', e.target.files[0]);
     this.props.firebase.uploadFile(filesPath, e.target.files[0], filesPath);
     console.log(e.target.files[0].name)
@@ -107,8 +108,8 @@ class SendMessages extends React.Component {
             <i className="fa fa-file-image-o" />
 
         <button onClick={this.pushMessage}>Send</button>
-        <input type="file" onChange={this.uploadImageHandler} />
-        {uploadedFiles && (
+        <input type="file" onChange={this.uploadImageHandler} value={this.state.file} />
+        {/* {uploadedFiles && (
           <div>
             <h3>Uploaded file(s):</h3>
             {map(uploadedFiles, (file, key) => (
@@ -118,7 +119,7 @@ class SendMessages extends React.Component {
               </div>
             ))}
           </div>
-        )}
+        )} */}
       </div>
     )
   }

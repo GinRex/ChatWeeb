@@ -30,14 +30,14 @@ class ChatScreen extends React.Component {
         this.setState({search: event.target.value.toLowerCase()})
     }
 
-    componentWillReceiveProps() {
-        const { users, profile, auth, presence, chats } = this.props;
-        const usersList = !isLoaded(users) || !isLoaded(presence)
-            ? 'Loading'
-            : isEmpty(users) || isEmpty(presence) || isEmpty(auth)
-                ? 'users list is empty'
-                : <ProfileList users={users} presence={presence} onClickUser={this.onUserClickHandler} chats={chats} id={auth.uid}/>
-    }
+    // componentWillReceiveProps() {
+    //     const { users, profile, auth, presence, chats } = this.props;
+    //     const usersList = !isLoaded(users) || !isLoaded(presence)
+    //         ? 'Loading'
+    //         : isEmpty(users) || isEmpty(presence) || isEmpty(auth)
+    //             ? 'users list is empty'
+    //             : <ProfileList users={users} search={this.state.search} presence={presence} onClickUser={this.onUserClickHandler} chats={chats} id={auth.uid}/>
+    // }
 
     toggleFavorite = () => {
         const favoriteList = this.props.profile.favoriteList || [];
@@ -56,13 +56,13 @@ class ChatScreen extends React.Component {
 
     render() {
         const { users, profile, auth, presence, chats } = this.props;
-        console.log(this.state.opp)
+        console.log(profile)
         console.log('presence', presence);
         const usersList = !isLoaded(users) || !isLoaded(presence)
             ? 'Loading'
             : isEmpty(users) || isEmpty(presence) || isEmpty(auth)
                 ? 'users list is empty'
-                : <ProfileList search={this.state.search} users={users} presence={presence} onClickUser={this.onUserClickHandler} chats={chats} id={auth.uid}/>
+                : <ProfileList favoriteList={profile.favoriteList || []} search={this.state.search} users={users} presence={presence} onClickUser={this.onUserClickHandler} chats={chats} id={auth.uid}/>
         
         return (<div>
 
@@ -95,6 +95,7 @@ export default compose(
     firebaseConnect([
         'users', // { path: '/todos' } // object notation
         'presence',
+        'favoriteList',
         'chats',
         'profile'
     ]),
