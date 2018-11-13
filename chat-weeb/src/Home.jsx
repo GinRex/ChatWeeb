@@ -106,12 +106,12 @@ class Home extends Component {
                                     <MenuItem onClick={this.signOutHandle}>Log Out</MenuItem>
                                 </Menu>
                             </div>
-                        ) : <Button variant="contained" color="secondary" onClick={this.loginHandle}>Login</Button>}
+                        ) : <Button variant="contained" color="secondary" onClick={this.loginHandle}>Login with google</Button>}
                     </Toolbar>
                 </AppBar>
                 {/* <Users /> */}
                 {!this.props.auth.isEmpty ?
-                <ChatScreen /> : "Please Login first"
+                <ChatScreen /> : null}
                 }
             </div>
         );

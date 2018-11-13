@@ -23,7 +23,7 @@ const enhance = compose(
 
 class Chats extends React.Component {
   scrollToBottom = () => {
-    this.messagesEnd.scrollIntoView({ behavior: "smooth" });
+    this.messagesEnd.scrollIntoView({ behavior: "instant", block: "end", inline: "nearest" });
   }
   
   componentDidMount() {
