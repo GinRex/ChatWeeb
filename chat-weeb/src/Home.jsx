@@ -13,10 +13,8 @@ import Button from '@material-ui/core/Button';
 import Avatar from '@material-ui/core/Avatar';
 import firebase, { auth } from 'firebase';
 import { withFirebase, isEmpty, isLoaded } from 'react-redux-firebase'
-import Users from './actions/users';
-import ChatScreen from './Chat/ChatScreen';
+import ChatScreen from './Components/Chat/ChatScreen';
 import { connect } from 'react-redux'
-import moment from 'moment';
 
 
 class Home extends Component {

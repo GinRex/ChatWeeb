@@ -1,6 +1,6 @@
 import React from 'react';
 import Profile from './Profile';
-import '../../Chat/ChatScreen.scss';
+import '../Chat/ChatScreen.scss';
 import _ from 'lodash';
 
 const ProfileList = ({ search, users, favoriteList, onClickUser, presence, chats, id }) => {

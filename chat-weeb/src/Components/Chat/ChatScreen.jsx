@@ -4,7 +4,7 @@ import Chats from './Chats';
 import { connect } from 'react-redux'
 import { compose } from 'redux'
 import { firebaseConnect, isLoaded, isEmpty } from 'react-redux-firebase'
-import ProfileList from '../Components/Profile/ProfileList';
+import ProfileList from '../Profile/ProfileList';
 import './ChatScreen.scss';
 
 
