@@ -104,21 +104,26 @@ class SendMessages extends React.Component {
     // console.log(uploadedFiles);
 
     return (
-        <div className="chat-message clearfix">
-          <textarea
-            name="message-to-send"
-            id="message-to-send"
-            placeholder="Type your message"
-            rows={3} defaultValue={""}
-            value={this.state.text}
-            onChange={this.messageHandler}
-            onKeyPress={this.handleKeyPress} />
-          <i className="fa fa-file-o" /> &nbsp;&nbsp;&nbsp;
+      <div className="chat-message clearfix">
+        <textarea
+          name="message-to-send"
+          id="message-to-send"
+          placeholder="Type your message"
+          rows={3} defaultValue={""}
+          value={this.state.text}
+          onChange={this.messageHandler}
+          onKeyPress={this.handleKeyPress} />
+        <i className="fa fa-file-o" /> &nbsp;&nbsp;&nbsp;
             <i className="fa fa-file-image-o" />
 
-          <button onClick={this.pushMessage}>Send</button>
-          <input type="file" onChange={this.uploadImageHandler}  />
-          {/* {uploadedFiles && (
+        <button onClick={this.pushMessage} id="icon-button-send"><i className="fa fa-location-arrow" style={{fontSize: "30px", paddingRight: "10px"}} /></button>
+
+        <input style={{ display: "none" }} type="file" accept="image" onChange={this.uploadImageHandler} id="icon-button-file" />
+        <label htmlFor="icon-button-file" style={{float:"right"}}>
+        <i className="fa fa-camera-retro" style={{fontSize: "30px"}} />
+        </label>
+        
+        {/* {uploadedFiles && (
           <div>
             <h3>Uploaded file(s):</h3>
             {map(uploadedFiles, (file, key) => (
@@ -129,7 +134,7 @@ class SendMessages extends React.Component {
             ))}
           </div>
         )} */}
-        </div>
+      </div>
     )
   }
 }
