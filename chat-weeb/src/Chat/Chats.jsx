@@ -10,7 +10,7 @@ import './ChatScreen.scss';
 const enhance = compose(
   firebaseConnect((props) => {
     // Set listeners based on props (prop is route parameter from react-router in this case)
-    console.log(props)
+    // console.log(props)
     return [
       { path: `chats/${props.params.chatId}` }, // create todo listener
       // `todos/${props.params.todoId}` // equivalent string notation
@@ -36,7 +36,7 @@ class Chats extends React.Component {
   render() {
     const { chat, firebase, params } = this.props;
 
-    console.log(chat);
+    // console.log(chat);
     return (
       <div>
         <div className="chat-history">

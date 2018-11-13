@@ -24,7 +24,7 @@ class message extends React.Component {
                         <span className="message-data-name"><i className="fa fa-circle online" />{opp.displayName}</span>
                         <span className="message-data-time">{moment(message.timestamp).format("DD MMM YYYY hh:mm a")}</span>
                     </div>
-                    <div className="message my-message">
+                    <div className="message my-message float-left">
                         {message.text}<br />
                         {message.image !== '' ? <img src={message.image} style={{ width: "100%", height: "100%" }} /> : ""}
                     </div>

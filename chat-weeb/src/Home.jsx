@@ -53,8 +53,8 @@ class Home extends Component {
             provider: 'google',
             type: 'popup'
         }).then(() => {
-            console.log('aaa')
-            console.log(this.props.auth.uid)
+            // console.log('aaa')
+            // console.log(this.props.auth.uid)
             this.setState({ login: true, profile: this.props.profile});
         })
     }

@@ -5,18 +5,18 @@ import _ from 'lodash';
 
 const ProfileList = ({ search, users, favoriteList, onClickUser, presence, chats, id }) => {
     let messages = [];
-    console.log(favoriteList)
+    // console.log(favoriteList)
     let onlineList = [];
     if (presence) {
         Object.keys(presence).map((id) => {
             onlineList.push(id);
         })
     }
-    console.log('onlinelist', onlineList)
+    // console.log('onlinelist', onlineList)
     chats && Object.keys(chats).map((key) => {
         if (key.includes(id) && chats[key]) {
             let pchats = Object.keys(chats[key]);
-            console.log(pchats);
+            // console.log(pchats);
             messages.push({ id: key.replace(id, ''), timestamp: chats[key][pchats[pchats.length - 1]].timestamp });
             // console.log(chatFullId)
         }
@@ -35,7 +35,7 @@ const ProfileList = ({ search, users, favoriteList, onClickUser, presence, chats
         });
         //next push all the online favorite users left that haven't chat yet
         Object.keys(usersList).map((user) => {
-            console.log(user)
+            // console.log(user)
             if (onlineList.includes(user) && favoriteList.includes(user)) {
                 profiles[user] = usersList[user];
                 // delete usersList[user];
@@ -47,18 +47,18 @@ const ProfileList = ({ search, users, favoriteList, onClickUser, presence, chats
             profiles[pid] = usersList[pid];
             delete usersList[pid];
         });
-        console.log(usersList)
+        // console.log(usersList)
         // users = profiles;
         Object.keys(usersList).map((user) => {
             profiles[user] = usersList[user];
         })
-        console.log(profiles)
+        // console.log(profiles)
     }
 
     return (
         <div>
             {profiles ?
-                <ul className="list">
+                <ul className="list container-fluid">
                     {
                         Object.keys(profiles).map((key, id) => (
 

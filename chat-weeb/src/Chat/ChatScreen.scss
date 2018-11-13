@@ -19,14 +19,12 @@ body {
   color: white;
 }
 
-.container {
-  margin: 0 auto;
-  width: 100%;
+.container-fluid {
   background: #444753;
 }
 
 .people-list {
-  width:300px;
+  width:40vh;
   float: left;
   
   .search {
@@ -50,7 +48,7 @@ body {
   
   ul {
     padding: 20px;
-    height: 770px;
+    height: 100vh;
  
     
     
@@ -80,7 +78,8 @@ body {
 }
 
 .chat {
-  width: 900px;
+  width: 100vh;
+  height: 100vh;
   float:left;
   background: #F2F5F8;
   border-top-right-radius: 5px;
@@ -130,7 +129,7 @@ body {
     padding: 30px 30px 20px;
     border-bottom: 2px solid white;
     overflow-y: scroll;
-    height: 575px;
+    height: 55vh;
     
     .message-data {
       margin-bottom: 15px;
@@ -149,29 +148,32 @@ body {
       border-radius: 7px;
       margin-bottom: 30px;
       width: auto;
+      max-width: 70vh;
       position: relative;
       
-      &:after {
-        bottom: 100%;
-        left: 7%;
-        border: solid transparent;
-        content: " ";
-        height: 0;
-        width: 0;
-        position: absolute;
-        pointer-events: none;
-        border-bottom-color: $green;
-        border-width: 10px;
-        margin-left: -10px;
-      }
+      // &:after {
+      //   bottom: 100%;
+      //   left: 7%;
+      //   border: solid transparent;
+      //   content: " ";
+      //   height: 0;
+      //   width: 0;
+      //   position: absolute;
+      //   pointer-events: none;
+      //   border-bottom-color: $green;
+      //   border-width: 10px;
+      //   margin-left: -10px;
+      // }
     }
     
     .my-message {
       background: $green;
+      word-wrap: break-word;
     }
     
     .other-message {
       background: $blue;
+      word-wrap: break-word;
       
       &:after {
         border-bottom-color: $blue;
@@ -254,6 +256,7 @@ body {
 	font-size: 0;
 	content: " ";
 	clear: both;
-	height: 0;
+  height: 0;
+  background: #444753;
 }
 

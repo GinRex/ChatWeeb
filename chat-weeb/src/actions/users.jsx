@@ -7,7 +7,7 @@ import ListUser from '../UsersList';
 
 const Users = ({ users, firebase, profile }) => {
   // Build Todos list if todos exist and are loaded
-    console.log(profile)
+    // console.log(profile)
   const usersList = !isLoaded(users)
     ? 'Loading'
     : isEmpty(users)

@@ -2,7 +2,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { withFirebase, firebaseConnect, getVal } from 'react-redux-firebase'
 import { compose, withHandlers, setPropTypes } from 'recompose';
-import { map } from 'lodash';
+import _, { map } from 'lodash';
 import { connect } from 'react-redux'
 import Dropzone from 'react-dropzone';
 
@@ -27,7 +27,7 @@ const handlers = {
   // Uploads files and push's objects containing metadata to database at dbPath
   onFilesDrop: props => files => {
     // uploadFiles(storagePath, files, dbPath)
-    console.log(files)
+    // console.log(files)
     return props.firebase.uploadFiles(filesPath, files, filesPath);
   },
   onFileDelete: props => (file, key) => {
@@ -48,19 +48,28 @@ class SendMessages extends React.Component {
     })
     this.setState({ text: e.target.value })
   }
-  handleKeyPress = (key) => {
+  handleKeyPress = async (key) => {
     if (key.charCode == 13) {
-      this.pushMessage();
+      await this.pushMessage();
+      await this.setState({ text: "", image: "" });
     }
   }
-  pushMessage = () => {
+  pushMessage = async () => {
     const { firebase, chatId, receiverId, profile, auth } = this.props;
     let time = new Date().getTime();
-    const message = { text: this.state.text + " ", image: this.state.image, receiveId: receiverId, senderId: auth.uid, timestamp: time };
-    console.log(message)
-    firebase.push('chats/' + chatId, message)
-    this.setState({ text: "", image: ""})
-    this.setRecord();
+    let mes = _.clone(this.state.text).trim();
+    if (mes == "" && this.state.image == "") {
+      await this.setState({ text: "", image: "" });
+    }
+    else {
+      const message = { text: this.state.text + " ", image: this.state.image, receiveId: receiverId, senderId: auth.uid, timestamp: time };
+      console.log(message)
+      await firebase.push('chats/' + chatId, message)
+      await this.setState({ text: "", image: "" })
+      await this.setRecord();
+    }
+
+
   };
   setRecord = () => {
     let time = new Date().getTime();
@@ -68,10 +77,10 @@ class SendMessages extends React.Component {
   }
 
   uploadImageHandler = (e) => {
-    this.setState({file: e.target.files[0]})
-    console.log('upload image', e.target.files[0]);
+    this.setState({ file: e.target.files[0] })
+    // console.log('upload image', e.target.files[0]);
     this.props.firebase.uploadFile(filesPath, e.target.files[0], filesPath);
-    console.log(e.target.files[0].name)
+    // console.log(e.target.files[0].name)
     this.props.firebase.storage().ref().child('uploadedFiles/' + e.target.files[0].name)
       .getDownloadURL().then((url) => this.setState({ image: url }));
 
@@ -92,24 +101,24 @@ class SendMessages extends React.Component {
   render() {
     //   const sampleThread = {id1:'datspots', id2: 'dattgk97'}
     const { uploadedFiles, onFileDelete, onFilesDrop } = this.props;
-    console.log(uploadedFiles);
-    
+    // console.log(uploadedFiles);
+
     return (
-      <div className="chat-message clearfix">
-        <textarea
-          name="message-to-send"
-          id="message-to-send"
-          placeholder="Type your message"
-          rows={3} defaultValue={""}
-          value={this.state.text}
-          onChange={this.messageHandler}
-          onKeyPress={this.handleKeyPress} />
-        <i className="fa fa-file-o" /> &nbsp;&nbsp;&nbsp;
+        <div className="chat-message clearfix">
+          <textarea
+            name="message-to-send"
+            id="message-to-send"
+            placeholder="Type your message"
+            rows={3} defaultValue={""}
+            value={this.state.text}
+            onChange={this.messageHandler}
+            onKeyPress={this.handleKeyPress} />
+          <i className="fa fa-file-o" /> &nbsp;&nbsp;&nbsp;
             <i className="fa fa-file-image-o" />
 
-        <button onClick={this.pushMessage}>Send</button>
-        <input type="file" onChange={this.uploadImageHandler} value={this.state.file} />
-        {/* {uploadedFiles && (
+          <button onClick={this.pushMessage}>Send</button>
+          <input type="file" onChange={this.uploadImageHandler}  />
+          {/* {uploadedFiles && (
           <div>
             <h3>Uploaded file(s):</h3>
             {map(uploadedFiles, (file, key) => (
@@ -120,7 +129,7 @@ class SendMessages extends React.Component {
             ))}
           </div>
         )} */}
-      </div>
+        </div>
     )
   }
 }

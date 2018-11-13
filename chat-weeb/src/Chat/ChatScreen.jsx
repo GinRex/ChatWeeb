@@ -17,7 +17,7 @@ class ChatScreen extends React.Component {
     }
 
     onUserClickHandler = (userId) => {
-        console.log(userId)
+        // console.log(userId)
         let id;
         if (userId > this.props.auth.uid) {
             id = userId + this.props.auth.uid;
@@ -41,7 +41,7 @@ class ChatScreen extends React.Component {
 
     toggleFavorite = () => {
         const favoriteList = this.props.profile.favoriteList || [];
-        console.log(favoriteList);
+        // console.log(favoriteList);
         if (this.isFavorite(this.state.receiverId)) {
             favoriteList.splice(favoriteList.indexOf(this.state.receiverId), 1);
             this.props.firebase.updateProfile({ favoriteList })
@@ -56,8 +56,8 @@ class ChatScreen extends React.Component {
 
     render() {
         const { users, profile, auth, presence, chats } = this.props;
-        console.log(profile)
-        console.log('presence', presence);
+        // console.log(profile)
+        // console.log('presence', presence);
         const usersList = !isLoaded(users) || !isLoaded(presence)
             ? 'Loading'
             : isEmpty(users) || isEmpty(presence) || isEmpty(auth)
@@ -66,7 +66,7 @@ class ChatScreen extends React.Component {
         
         return (<div>
 
-            <div className="container clearfix">
+            <div className="clearfix container-fluid">
                 <div className="people-list" id="people-list">
                     <div className="search">
                         <input type="text" placeholder="search" value={this.state.search} onChange={this.searchChangeHandler} />
@@ -74,7 +74,7 @@ class ChatScreen extends React.Component {
                     </div>
                     {usersList}
                 </div>
-                <div className="chat">
+                <div className="chat container-fluid">
                     <div className="chat-header clearfix">
                     {this.state.opp ? <img src={this.state.opp.avatarUrl} style={{ borderRadius: "30px", width: "60px", height: "60px" }} alt="avatarUrl" />  : "" } 
                         

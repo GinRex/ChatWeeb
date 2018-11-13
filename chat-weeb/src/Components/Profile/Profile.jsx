@@ -2,7 +2,7 @@ import React from 'react';
 import moment from 'moment';
 
 const Profile = ({profile, online, search}) => {
-    console.log(search);
+    // console.log(search);
     return (
         profile.displayName && profile.displayName.toLowerCase().includes(search) ?
         <div>
